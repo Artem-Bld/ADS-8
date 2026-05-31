@@ -63,7 +63,7 @@ class BST {
 
     int depth() const {
         if (!root) return 0;
-        return getDepth(root);
+        return getDepth(root) - 1;
     }
 
     int search(T value) const {
