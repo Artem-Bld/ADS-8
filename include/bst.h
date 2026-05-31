@@ -2,92 +2,72 @@
 #ifndef INCLUDE_BST_H_
 #define INCLUDE_BST_H_
 
-#include <iostream>
+#include <string>
 #include <algorithm>
-#include <vector>
-#include <utility>
 
-template<typename T>
+template <typename T>
 class BST {
- private:
+ public:
     struct Node {
-        T data;
+        T value;
         int count;
-        Node* left;
-        Node* right;
-        Node(const T& value) : data(value), count(1), left(nullptr), right(nullptr) {}
+        Node *left;
+        Node *right;
+        explicit Node(T val) : value(val), count(1), left(nullptr), right(nullptr) {}
     };
+
+ private:
     Node* root;
-    Node* insert(Node* node, const T& value) {
-        if (node == nullptr) {
-            return new Node(value);
-        }
-        if (value < node->data) {
-            node->left = insert(node->left, value);
-        } else if (value > node->data) {
-            node->right = insert(node->right, value);
-        } else {
-            // Слово уже существует - увеличиваем счетчик
+    Node* addNode(Node* node, T value) {
+        if (!node) return new Node(value);
+        if (value == node->value) {
             node->count++;
+        } else if (value < node->value) {
+            node->left = addNode(node->left, value);
+        } else {
+            node->right = addNode(node->right, value);
         }
         return node;
     }
-    Node* search(Node* node, const T& value) const {
-        if (node == nullptr || node->data == value) {
-            return node;
-        }
-        if (value < node->data) {
-            return search(node->left, value);
-        } else {
-            return search(node->right, value);
-        }
+    int getDepth(Node* node) const {
+        if (!node) return 0;
+        int leftDepth = getDepth(node->left);
+        int rightDepth = getDepth(node->right);
+        return 1 + std::max(leftDepth, rightDepth);
     }
-    int depth(Node* node) const {
-        if (node == nullptr) {
-            return 0;
-        }
-        return 1 + std::max(depth(node->left), depth(node->right));
+    Node* searchNode(Node* node, T value) const {
+        if (!node) return nullptr;
+        if (value == node->value) return node;
+        if (value < node->value) return searchNode(node->left, value);
+        return searchNode(node->right, value);
     }
     void clear(Node* node) {
-        if (node != nullptr) {
+        if (node) {
             clear(node->left);
             clear(node->right);
             delete node;
         }
     }
-    void collectNodes(Node* node, std::vector<std::pair<T, int>>& nodes) const {
-        if (node != nullptr) {
-            collectNodes(node->left, nodes);
-            nodes.push_back(std::make_pair(node->data, node->count));
-            collectNodes(node->right, nodes);
-        }
-    }
-    
+
  public:
     BST() : root(nullptr) {}
-    ~BST() {
-        clear(root);
-    }
-    void insert(const T& value) {
-        root = insert(root, value);
-    }
-    bool search(const T& value) const {
-        return search(root, value) != nullptr;
-    }
-    int getCount(const T& value) const {
-        Node* node = search(root, value);
-        return node ? node->count : 0;
+    ~BST() { clear(root); }
+    void add(T value) {
+        root = addNode(root, value);
     }
     int depth() const {
-        return depth(root);
+        if (!root) return 0;
+        return getDepth(root) - 1;
     }
-    bool isEmpty() const {
-        return root == nullptr;
+    bool search(T value) const {
+        return searchNode(root, value) != nullptr;
     }
-    std::vector<std::pair<T, int>> getAllNodes() const {
-        std::vector<std::pair<T, int>> nodes;
-        collectNodes(root, nodes);
-        return nodes;
+    int getCount(T value) const {
+        Node* node = searchNode(root, value);
+        return node ? node->count : 0;
+    }
+    Node* getRoot() const {
+        return root;
     }
 };
 
