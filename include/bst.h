@@ -1,8 +1,11 @@
 // Copyright 2021 NNTU-CS
 #ifndef INCLUDE_BST_H_
 #define INCLUDE_BST_H_
+
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <utility>
 
 template<typename T>
 class BST {
@@ -24,6 +27,7 @@ class BST {
         } else if (value > node->data) {
             node->right = insert(node->right, value);
         } else {
+            // Слово уже существует - увеличиваем счетчик
             node->count++;
         }
         return node;
@@ -54,12 +58,12 @@ class BST {
     void collectNodes(Node* node, std::vector<std::pair<T, int>>& nodes) const {
         if (node != nullptr) {
             collectNodes(node->left, nodes);
-            nodes.push_back({node->data, node->count});
+            nodes.push_back(std::make_pair(node->data, node->count));
             collectNodes(node->right, nodes);
         }
     }
     
-public:
+ public:
     BST() : root(nullptr) {}
     ~BST() {
         clear(root);
@@ -86,4 +90,5 @@ public:
         return nodes;
     }
 };
+
 #endif  // INCLUDE_BST_H_
