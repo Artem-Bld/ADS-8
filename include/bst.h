@@ -6,7 +6,7 @@
 
 template<typename T>
 class BST {
-private:
+ private:
     struct Node {
         T data;
         int count;
