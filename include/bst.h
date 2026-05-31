@@ -66,13 +66,8 @@ class BST {
         return getDepth(root);
     }
 
-    bool search(T value) const {
-        return searchNode(root, value) != nullptr;
-    }
-
-    int getCount(T value) const {
-        Node* node = searchNode(root, value);
-        return node ? node->count : 0;
+    int search(T value) const {
+        return searchNode(root, value);
     }
 
     Node* getRoot() const {
