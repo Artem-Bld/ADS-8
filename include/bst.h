@@ -18,29 +18,33 @@ class BST {
 
  private:
     Node* root;
+
     Node* addNode(Node* node, T value) {
         if (!node) return new Node(value);
-        if (value == node->value) {
-            node->count++;
-        } else if (value < node->value) {
+        if (value < node->value) {
             node->left = addNode(node->left, value);
-        } else {
+        } else if (value > node->value) {
             node->right = addNode(node->right, value);
+        } else {
+            node->count++;
         }
         return node;
     }
+
     int getDepth(Node* node) const {
         if (!node) return 0;
         int leftDepth = getDepth(node->left);
         int rightDepth = getDepth(node->right);
         return 1 + std::max(leftDepth, rightDepth);
     }
+
     Node* searchNode(Node* node, T value) const {
-        if (!node) return 0;
+        if (!node) return nullptr;
         if (value == node->value) return node;
         if (value < node->value) return searchNode(node->left, value);
         return searchNode(node->right, value);
     }
+
     void clear(Node* node) {
         if (node) {
             clear(node->left);
@@ -52,20 +56,25 @@ class BST {
  public:
     BST() : root(nullptr) {}
     ~BST() { clear(root); }
+
     void add(T value) {
         root = addNode(root, value);
     }
+
     int depth() const {
         if (!root) return 0;
-        return getDepth(root) - 1;
+        return getDepth(root);
     }
+
     bool search(T value) const {
         return searchNode(root, value) != nullptr;
     }
+
     int getCount(T value) const {
         Node* node = searchNode(root, value);
         return node ? node->count : 0;
     }
+
     Node* getRoot() const {
         return root;
     }
