@@ -1,4 +1,5 @@
 // Copyright 2021 NNTU-CS
+
 #include "bst.h"
 #include <fstream>
 #include <iostream>
@@ -6,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 bool isLatinLetter(char ch) {
     return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
@@ -25,8 +27,9 @@ void makeTree(BST<std::string>& tree, const char* filename) {
         return;
     }
     std::string currentWord;
-    while (!file.eof()) {
+    while (true) {
         char ch = file.get();
+        if (file.eof()) break;
         if (isLatinLetter(ch)) {
             currentWord += toLower(ch);
         } else {
@@ -41,7 +44,6 @@ void makeTree(BST<std::string>& tree, const char* filename) {
     }
     file.close();
 }
-
 bool compareByFrequency(const std::pair<std::string, int>& a, 
                         const std::pair<std::string, int>& b) {
     if (a.second != b.second) {
@@ -69,7 +71,6 @@ void printFreq(BST<std::string>& tree) {
     outFile << "Tree depth: " << tree.depth() << std::endl;
     outFile << "\nWord -> Frequency (sorted by frequency descending):" << std::endl;
     outFile << "----------------------------------------------------" << std::endl;
-    int displayCount = std::min(50, (int)nodes.size());
     for (size_t i = 0; i < nodes.size(); i++) {
         std::cout << nodes[i].first << " -> " << nodes[i].second << std::endl;
         outFile << nodes[i].first << " -> " << nodes[i].second << std::endl;
