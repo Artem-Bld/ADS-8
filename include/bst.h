@@ -40,7 +40,7 @@ class BST {
 
     int searchNode(Node* node, T value) const {
         if (!node) return 0;
-        if (value == node->value) return node;
+        if (value == node->value) return node->count;
         if (value < node->value) return searchNode(node->left, value);
         return searchNode(node->right, value);
     }
