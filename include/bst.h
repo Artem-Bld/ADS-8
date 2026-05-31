@@ -35,7 +35,7 @@ class BST {
         int rightDepth = getDepth(node->right);
         return 1 + std::max(leftDepth, rightDepth);
     }
-    int searchNode(Node* node, T value) const {
+    Node* searchNode(Node* node, T value) const {
         if (!node) return 0;
         if (value == node->value) return node->count;
         if (value < node->value) return searchNode(node->left, value);
